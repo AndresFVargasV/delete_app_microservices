@@ -11,7 +11,7 @@ CORS(app)
 def api():
     return jsonify({'msg': 'Hello World'})
 
-@app.route("/api/delete", methods=["POST"])
+@app.route("/api/delete", methods=["DELETE"])
 def eliminar_usuario():
     try:
         client = dbase.establecer_conexion()
@@ -27,15 +27,15 @@ def eliminar_usuario():
         if db is None or collection is None:
             raise Exception("No se pudo establecer la conexión con MongoDB")
 
-        # Obtener datos del formulario enviado mediante POST
-        datos = request.form.get('numero_documento')
-
+        
+        datos = request.args.get('numero_documento')
+        print(datos)
         # Verificar si se proporcionaron datos
         if not datos:
             raise Exception("Número de documento no proporcionado en la solicitud")
 
         # Eliminar el usuario
-        if (check_user() is None):
+        if (check_user(datos) is None):
             raise Exception("El usuario no existe")
         else:
             collection.delete_one({'numero_documento': datos})
@@ -48,7 +48,7 @@ def eliminar_usuario():
         if client:
             client.close()
 
-def check_user():
+def check_user(datos):
     try:
         client = dbase.establecer_conexion()
 
@@ -62,9 +62,6 @@ def check_user():
         # Verificar si la base de datos y la colección se seleccionaron correctamente
         if db is None or collection is None:
             raise Exception("No se pudo establecer la conexión con MongoDB")
-
-        # Obtener datos del formulario enviado mediante POST
-        datos = request.form.get('numero_documento')
 
         # Verificar si se proporcionaron datos
         if not datos:
