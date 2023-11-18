@@ -1,6 +1,4 @@
 from flask import Flask, jsonify, make_response, request
-from bson import json_util
-import json
 import dbconfig as dbase
 from flask_cors import CORS
 
@@ -29,7 +27,6 @@ def eliminar_usuario():
 
         
         datos = request.args.get('numero_documento')
-        print(datos)
         # Verificar si se proporcionaron datos
         if not datos:
             raise Exception("Número de documento no proporcionado en la solicitud")
@@ -45,8 +42,7 @@ def eliminar_usuario():
     except Exception as e:
         return make_response(jsonify({'error': str(e)}), 500)
     finally:
-        if client:
-            client.close()
+        dbase.cerrar_conexion(client)
 
 def check_user(datos):
     try:
