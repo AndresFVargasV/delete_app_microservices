@@ -54,4 +54,4 @@ Si encuentras algún problema o tienes alguna mejora, siéntete libre de abrir u
 
 ## Licencia
 
-[MIT License]
+Este proyecto está bajo la Licencia MIT. Consulta el archivo [MIT License](LICENSE) para obtener más detalles.
