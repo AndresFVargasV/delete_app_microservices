@@ -11,8 +11,7 @@ Eliminar Usuario: Eliminar un usuario específico mediante una solicitud DELETE 
 1. Clona el repositorio:
 
     ```bash
-    git clone https://tu-repositorio.git
-    cd nombre-de-la-aplicacion
+    git clone https://github.com/AndresFVargasV/delete_app_microservices.git
     ```
 
 2. Instala las dependencias:
