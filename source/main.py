@@ -14,7 +14,7 @@ def api():
     return jsonify({'msg': 'Hello World'})
 
 # Ruta para eliminar un usuario
-@app.route("/api/delete" ,  methods=["DELETE"])
+@app.route("/api/delete", methods=["DELETE"])
 def eliminar_usuario():
     try:
         client = dbase.establecer_conexion()
@@ -23,7 +23,17 @@ def eliminar_usuario():
         if not client:
             raise Exception("No se pudo establecer la conexión con MongoDB")
 
+        # Obtener el número de documento del usuario a eliminar
+        dato = request.args.get('numero_documento')
 
+        # Verificar si se proporcionaron datos
+        if not dato:
+            raise Exception("Número de documento no proporcionado en la solicitud")
+
+        # Verificar si el usuario existe antes de intentar eliminarlo
+        user_info = check_user(dato)
+        if user_info is None:
+            raise Exception("El usuario no existe")
 
         # Iniciar la transacción
         with client.start_session() as session:
@@ -35,20 +45,12 @@ def eliminar_usuario():
                 # Seleccionar la base de datos y la colección
                 db, collection_log = dbase.seleccionar_bd_y_coleccion(client, "crud", "microserviceslogs")
 
-                # Obtener el número de documento del usuario a eliminar
-                dato = request.args.get('numero_documento')
-
-                # Verificar si se proporcionaron datos
-                if not dato:
-                    raise Exception("Número de documento no proporcionado en la solicitud")
-
                 # Eliminar el usuario
-                if (check_user(dato) is None):
-                    raise Exception("El usuario no existe")
-                else:
-                    collection_person.delete_one({'numero_documento': dato})
+                collection_person.delete_one({'numero_documento': dato})
 
-                    collection_log.insert_one(f.info_log(check_user(dato).get('tipo_documento'), dato))
+                # Registrar el log
+                log_info = f.info_log(user_info.get('tipo_documento'), dato)
+                collection_log.insert_one(log_info)
 
         # Respondemos al cliente con un mensaje de éxito
         return jsonify({'mensaje': 'Usuario eliminado correctamente'})
@@ -57,6 +59,7 @@ def eliminar_usuario():
         return make_response(jsonify({'error': str(e)}), 500)
     finally:
         dbase.cerrar_conexion(client)
+
 
 
 
