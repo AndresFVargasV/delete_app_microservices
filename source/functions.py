@@ -27,7 +27,7 @@ def info_log(tipo_documento, numero_documento):
         'tipo_documento': tipo_documento,
         'numero_documento': numero_documento,
         'fecha': obtener_fecha_formateada(),
-        'descripcion': f'Se agregó el usuario: {numero_documento}'
+        'descripcion': f'Se borró el usuario: {numero_documento}'
     }
 
     return log
