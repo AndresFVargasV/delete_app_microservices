@@ -4,7 +4,7 @@ from pymongo.errors import ConnectionFailure
 def establecer_conexion():
     try:
         # Intenta establecer la conexión con el servidor MongoDB
-        client = MongoClient('mongodb://localhost:27017/')
+        client = MongoClient('mongodb://127.0.0.1:27017/')
         
         # Verifica si la conexión fue exitosa lanzando una excepción si no lo fue
         client.admin.command('ismaster')
